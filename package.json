@@ -1,0 +1,19 @@
+{
+  "name": "markup-template",
+  "engines": {
+    "node": "^16.14.0",
+    "npm": "^8.5.3"
+  },
+  "scripts": {
+    "pug": "pug src/pug/ -o dist/ --hierarchy -P",
+    "sass": "sass src/scss/style.scss dist/css/style.css --no-source-map",
+    "start": "",
+    "build": ""
+  },
+  "devDependencies": {
+    "pug": "^3.0.2",
+    "pug-cli": "github:pugjs/pug-cli#master",
+    "sass": "^1.49.9",
+    "typescript": "^4.5.5"
+  }
+}
