@@ -6,18 +6,14 @@
   },
   "type": "module",
   "scripts": {
-    "rimraf": "rimraf dist",
-    "pug": "pug src/pug/ -o dist/ --hierarchy -P -w",
-    "sass": "sass src/scss/style.scss:dist/css/style.css -s compressed --no-source-map -w",
-    "postcss": "postcss dist/css/style.css -o dist/css/style.css -w",
-    "p": "npm run sass && npm run postcss",
-    "ts": "node esbuild.js",
-    "lint": "eslint 'src/ts/*.ts' --fix",
-    "stylelint": "stylelint 'src/scss/**/*.scss' --fix",
-    "start": "",
-    "build": "rimraf dist && npm run pug & npm run sass && npm run postcss & npm run ts"
+    "tsc": "tsc src/ts/*.ts --noemit",
+    "eslint": "eslint 'src/ts/*.ts' --fix",
+    "lint": "npm run tsc && npm run eslint",
+    "start": "NODE_ENV=start node --loader ts-node/esm build.ts",
+    "build": "NODE_ENV=build node --loader ts-node/esm build.ts"
   },
   "devDependencies": {
+    "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
     "autoprefixer": "^10.4.2",
@@ -38,6 +34,7 @@
     "stylelint": "^14.5.3",
     "stylelint-config-recess-order": "^3.0.0",
     "stylelint-config-standard": "^25.0.0",
+    "ts-node": "^10.7.0",
     "typescript": "^4.5.5"
   }
 }
