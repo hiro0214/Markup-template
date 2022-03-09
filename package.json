@@ -4,16 +4,40 @@
     "node": "^16.14.0",
     "npm": "^8.5.3"
   },
+  "type": "module",
   "scripts": {
-    "pug": "pug src/pug/ -o dist/ --hierarchy -P",
-    "sass": "sass src/scss/style.scss dist/css/style.css --no-source-map",
+    "rimraf": "rimraf dist",
+    "pug": "pug src/pug/ -o dist/ --hierarchy -P -w",
+    "sass": "sass src/scss/style.scss:dist/css/style.css -s compressed --no-source-map -w",
+    "postcss": "postcss dist/css/style.css -o dist/css/style.css -w",
+    "p": "npm run sass && npm run postcss",
+    "ts": "node esbuild.js",
+    "lint": "eslint 'src/ts/*.ts' --fix",
+    "stylelint": "stylelint 'src/scss/**/*.scss' --fix",
     "start": "",
-    "build": ""
+    "build": "rimraf dist && npm run pug & npm run sass && npm run postcss & npm run ts"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
+    "autoprefixer": "^10.4.2",
+    "esbuild": "^0.14.25",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "postcss": "^8.4.8",
+    "postcss-cli": "^9.1.0",
+    "postcss-combine-media-query": "^1.0.1",
+    "postcss-scss": "^4.0.3",
+    "prettier": "^2.5.1",
     "pug": "^3.0.2",
     "pug-cli": "github:pugjs/pug-cli#master",
+    "rimraf": "^3.0.2",
     "sass": "^1.49.9",
+    "stylelint": "^14.5.3",
+    "stylelint-config-recess-order": "^3.0.0",
+    "stylelint-config-standard": "^25.0.0",
     "typescript": "^4.5.5"
   }
 }

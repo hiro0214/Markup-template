@@ -2,6 +2,7 @@
   "files.exclude": {
     "**/node_modules": true
   },
+  "files.autoSave": "onFocusChange",
   "editor.tabSize": 2,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
