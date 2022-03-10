@@ -2,50 +2,62 @@ import cp from 'child_process';
 
 const isEnvironment = process.env.NODE_ENV as 'build' | 'start';
 const start = new Date();
-const inDir = 'src';
-const outDir = 'dist';
+const inputDir = 'src';
+const outputDir = 'dist';
 const scripts = {
-  pug: `pug ${inDir}/pug/ -o ${outDir}/ --hierarchy -P`,
-  sass: `sass ${inDir}/scss/style.scss:${outDir}/css/style.css -s compressed --no-source-map`,
-  postcss: `postcss ${outDir}/css/style.css -o ${outDir}/css/style.css`,
+  pug: `pug ${inputDir}/pug/ -o ${outputDir}/ --hierarchy -P`,
+  sass: `sass ${inputDir}/scss/style.scss:${outputDir}/css/style.css -s compressed --no-source-map`,
+  postcss: `postcss ${outputDir}/css/style.css -o ${outputDir}/css/style.css`,
   ts: 'node --loader ts-node/esm esbuild.ts',
-  tsc: `tsc ${inDir}/ts/*.ts --noemit`,
-  eslint: `eslint '${inDir}/ts/*.ts' --fix`,
-  stylelint: `stylelint '${inDir}/scss/**/*.scss' --fix`,
+  tsc: `tsc ${inputDir}/ts/*.ts --noEmit`,
+  eslint: `eslint '${inputDir}/ts/*.ts' --fix`,
+  stylelint: `stylelint '${inputDir}/scss/**/*.scss' --fix`,
+  server: `browser-sync start -s ${outputDir} -f ${outputDir} --port 8080 --no-notify`,
 };
 
-const build = (isEnvironment: 'build' | 'start') => {
-  if (isEnvironment === 'build') {
-    const lint = new Promise((res, rej) =>
-      cp.exec(`${scripts.stylelint} && ${scripts.tsc} && ${scripts.eslint}`, (err) => (err ? rej(err) : res('')))
-    );
-    const pug = new Promise((res, rej) => cp.exec(`${scripts.pug}`, (err) => (err ? rej(err) : res(''))));
-    const scss = new Promise((res, rej) =>
-      cp.exec(`${scripts.sass}`, (err) => (err ? rej(err) : cp.exec(`${scripts.postcss}`), () => res('')))
-    );
-    const ts = new Promise((res, rej) => cp.exec(`NODE_ENV=build ${scripts.ts}`, (err) => (err ? rej(err) : res(''))));
-
-    return lint.then(() => {
-      Promise.all([pug, scss, ts]);
+const scriptExec = (script: string) => {
+  return new Promise((res) => {
+    cp.exec(script, (err) => {
+      if (err) {
+        throw new Error(err.message);
+      } else {
+        res('done');
+      }
     });
-  } else {
-    const pug = new Promise((res, rej) => cp.exec(`${scripts.pug} -w`, (err) => (err ? rej(err) : res(''))));
-    const scss = new Promise((res, rej) =>
-      cp.exec(`${scripts.sass} -w`, (err) => (err ? rej(err) : cp.exec(`${scripts.postcss} -w`), () => res('')))
-    );
-    const ts = new Promise((res, rej) => cp.exec(`NODE_ENV=start ${scripts.ts}`, (err) => (err ? rej(err) : res(''))));
+  });
+};
 
-    return Promise.all([pug, scss, ts]);
+const build = async () => {
+  if (isEnvironment === 'build') {
+    const lint = async () => await scriptExec(`${scripts.stylelint} && ${scripts.tsc} && ${scripts.eslint}`);
+    const pug = async () => await scriptExec(`${scripts.pug}`);
+    const scss = async () => await scriptExec(`${scripts.sass}`).then(() => scriptExec(`${scripts.postcss}`));
+    const ts = async () => await scriptExec(`NODE_ENV=build ${scripts.ts}`);
+
+    await lint().then(() => Promise.all([pug(), scss(), ts()]));
+  } else {
+    const pug = async () => await scriptExec(`${scripts.pug} -w`);
+    const scss = async () => await scriptExec(`${scripts.sass} -w`);
+    const ts = async () => await scriptExec(`NODE_ENV=start ${scripts.ts}`);
+    const server = cp.exec(`${scripts.server}`);
+
+    return Promise.all([pug(), scss(), ts(), server]);
   }
 };
 
-cp.exec(`rimraf ${outDir}`);
-build(isEnvironment)
+/**
+ * Remove dist
+ */
+cp.exec(`rimraf ${outputDir}`);
+
+/**
+ * Exec Build
+ */
+build()
   .then(() => {
     const timeDiff = (new Date().getTime() - start.getTime()) / 1000;
     console.log(`\n===== Compile Success! [time: ${timeDiff.toFixed(1)}s] =====\n`);
   })
-  .catch((err) => {
-    console.log('\n', err);
-    console.log('===== Compile Failed... =====\n');
+  .finally(() => {
+    //
   });

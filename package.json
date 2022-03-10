@@ -6,7 +6,7 @@
   },
   "type": "module",
   "scripts": {
-    "tsc": "tsc src/ts/*.ts --noemit",
+    "tsc": "tsc src/ts/*.ts --noEmit",
     "eslint": "eslint 'src/ts/*.ts' --fix",
     "lint": "npm run tsc && npm run eslint",
     "start": "NODE_ENV=start node --loader ts-node/esm build.ts",
@@ -17,6 +17,7 @@
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
     "autoprefixer": "^10.4.2",
+    "browser-sync": "^2.27.7",
     "esbuild": "^0.14.25",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.5.0",
