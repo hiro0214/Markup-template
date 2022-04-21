@@ -4,7 +4,7 @@
 | Package | Version|
 | - | - |
 | node | 16.14.0 |
-| npm | 8.5.3 |
+| npm | 8.6.0 |
 
 ## Recommend
 - エディターはVisual Studio Codeを推奨。
