@@ -17,13 +17,13 @@ const scripts = {
   server: `browser-sync start -s ${outputDir} -f ${outputDir} --port ${port} --no-notify`,
 };
 
-const scriptExec = (script: string) => {
+const scriptExec = (script: string): Promise<void> => {
   return new Promise((res) => {
     cp.exec(script, (err) => {
       if (err) {
         throw new Error(err.message);
       } else {
-        res('done');
+        res();
       }
     });
   });
