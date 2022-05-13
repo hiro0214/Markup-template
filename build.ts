@@ -7,8 +7,8 @@ const outputDir = 'dist';
 const port = '8080';
 const scripts = {
   pug: `pug ${inputDir}/pug/ -o ${outputDir}/ --hierarchy -P`,
-  sass: `sass ${inputDir}/scss/style.scss:${outputDir}/css/style.css -s compressed --no-source-map`,
-  postcss: `postcss ${outputDir}/css/style.css -o ${outputDir}/css/style.css`,
+  sass: `sass ${inputDir}/scss/:${outputDir}/css/ -s compressed --no-source-map`,
+  postcss: `postcss ${outputDir}/css/ -o ${outputDir}/css/`,
   ts: 'node --loader ts-node/esm esbuild.ts',
   img: 'node imagemin.js',
   tsc: `tsc ${inputDir}/ts/*.ts --noEmit`,
