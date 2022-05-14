@@ -5,7 +5,7 @@ import imageminPngquant from 'imagemin-pngquant';
 import imageminSvgo from 'imagemin-svgo';
 
 const imageBuild = () => {
-  imagemin([`src/images/**/*.{jpg,png,gif,svg,ico}`], {
+  imagemin([`src/assets/images/**/*.{jpg,png,gif,svg,ico}`], {
     plugins: [
       imageminMozjpeg({ quality: 80 }),
       imageminPngquant({ quality: [0.65, 0.8] }),
@@ -13,7 +13,7 @@ const imageBuild = () => {
       imageminSvgo(),
     ],
     replaceOutputDir: (output) => {
-      return output.replace(/images\//, `../dist/images/`);
+      return output.replace(/images\//, `../../dist/images/`);
     },
   });
 };

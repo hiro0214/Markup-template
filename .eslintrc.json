@@ -12,6 +12,7 @@
   },
   "plugins": ["@typescript-eslint", "import", "unused-imports"],
   "extends": ["eslint:recommended", "prettier", "plugin:@typescript-eslint/recommended"],
+  "ignorePatterns": ["!src/.*/"],
   "rules": {
     "@typescript-eslint/no-var-requires": "off",
 
