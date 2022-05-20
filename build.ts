@@ -1,10 +1,10 @@
 import cp from 'child_process';
+import browerSync from 'browser-sync';
 
 const isEnvironment = process.env.NODE_ENV as 'build' | 'start';
 const start = new Date();
 const inputDir = 'src';
 const outputDir = 'dist';
-const port = '8080';
 
 const scripts = {
   pug: `pug ${inputDir}/pug/ -o ${outputDir}/ --hierarchy -P`,
@@ -15,7 +15,6 @@ const scripts = {
   tsc: `tsc`,
   eslint: `eslint '${inputDir}/**/*.ts' --fix`,
   stylelint: `stylelint '${inputDir}/{**,.*}/*.{css,scss,sass}' --fix`,
-  server: `browser-sync start -s ${outputDir} -f ${outputDir} --port ${port} --no-notify`,
 };
 
 const scriptExec = (script: string): Promise<void> => {
@@ -42,14 +41,21 @@ const build = async () => {
 
     await lint().then(() => Promise.all([pug(), scss(), ts(), img()]));
   } else {
-    console.log(`\n===== Oepn Web Server. Access to \x1b[36mhttp://localhost${port}/ \x1b[0m=====\n`);
     const pug = () => scriptExec(`${scripts.pug} -w`);
     const scss = () => scriptExec(`${scripts.sass} -w`);
     const ts = () => scriptExec(`NODE_ENV=start ${scripts.ts}`);
-    const img = () => scriptExec(`watch '${scripts.img}' src/images/`);
-    const server = cp.exec(`${scripts.server}`);
+    const img = () => scriptExec(`watch '${scripts.img}' ${inputDir}/assets/images/`);
+    const server = () => {
+      browerSync.init({
+        server: outputDir,
+        files: outputDir,
+        open: 'external',
+        online: true,
+        notify: false,
+      });
+    };
 
-    return Promise.all([pug(), scss(), ts(), img(), server]);
+    return Promise.all([pug(), scss(), ts(), img(), server()]);
   }
 };
 

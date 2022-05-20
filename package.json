@@ -13,6 +13,7 @@
     "build": "NODE_ENV=build node --loader ts-node/esm build.ts"
   },
   "devDependencies": {
+    "@types/browser-sync": "^2.26.3",
     "@types/glob": "^7.2.0",
     "@types/imagemin-gifsicle": "^7.0.1",
     "@types/imagemin-mozjpeg": "^8.0.1",
