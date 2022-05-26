@@ -42,7 +42,7 @@ const build = async () => {
     await lint().then(() => Promise.all([pug(), scss(), ts(), img()]));
   } else {
     const pug = () => scriptExec(`${scripts.pug} -w`);
-    const scss = () => scriptExec(`${scripts.sass} -w`);
+    const scss = () => scriptExec(`npm-watch sass`);
     const ts = () => scriptExec(`NODE_ENV=start ${scripts.ts}`);
     const img = () => scriptExec(`watch '${scripts.img}' ${inputDir}/assets/images/`);
     const server = () => {
