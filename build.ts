@@ -1,5 +1,6 @@
 import cp from 'child_process';
 import browerSync from 'browser-sync';
+import { internalIpV4Sync } from 'internal-ip';
 
 const isEnvironment = process.env.NODE_ENV as 'build' | 'start';
 const start = new Date();
@@ -49,7 +50,7 @@ const build = async () => {
       browerSync.init({
         server: outputDir,
         files: outputDir,
-        open: 'external',
+        host: internalIpV4Sync(),
         online: true,
         notify: false,
       });
