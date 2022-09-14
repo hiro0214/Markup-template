@@ -8,7 +8,7 @@ const inputDir = 'src';
 const outputDir = 'dist';
 
 const scripts = {
-  pug: `pug ${inputDir}/pug/ -o ${outputDir}/ --hierarchy -P`,
+  pug: `pug ${inputDir} -o ${outputDir} -P`,
   sass: `sass ${inputDir}/assets/css/:${outputDir}/css/ -s compressed --no-source-map`,
   postcss: `postcss ${outputDir}/css/ -d ${outputDir}/css/`,
   ts: 'node --loader ts-node/esm esbuild.ts',
